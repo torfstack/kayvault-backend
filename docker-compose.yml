@@ -1,7 +1,17 @@
 version: "0.0.1-SNAPSHOT"
 services:
+  db:
+    image: mariadb:10.11.2-jammy
+    ports:
+      - 3306:3306
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: kayvaultdb
+      MYSQL_USER: kayvault
+      MYSQL_PASSWORD: password
   kayvault:
-    image: registry.cloud.okteto.net/torfstack/kayvault
+    image: registry.cloud.okteto.net/torfstack/kayvault:latest
     ports:
       - 8080:8080
     deploy:

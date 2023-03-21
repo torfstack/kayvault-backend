@@ -23,7 +23,7 @@ dependencies {
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
-	implementation("org.hibernate:hibernate-core:6.1.7.Final")
+	//implementation("org.hibernate:hibernate-core:6.1.7.Final")
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 

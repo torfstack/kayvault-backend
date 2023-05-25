@@ -6,6 +6,7 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.web.filter.CommonsRequestLoggingFilter
 
 private val log = KotlinLogging.logger {  }
@@ -14,22 +15,24 @@ private val log = KotlinLogging.logger {  }
 class KayVaultApplication
 
 fun main(args: Array<String>) {
-	log.info { "Locking KayVault" }
-	runApplication<KayVaultApplication>(*args)
+    log.info { "Locking KayVault" }
+    runApplication<KayVaultApplication>(*args)
 }
 
 @Configuration
 class RequestLoggingConfiguration {
 
-	@Bean
-	fun logFilter(): CommonsRequestLoggingFilter {
-		return CommonsRequestLoggingFilter()
-			.also {
-				it.setIncludeQueryString(true)
-				it.setIncludePayload(true)
-				it.setMaxPayloadLength(10000)
-				it.setIncludeHeaders(true)
-				it.setAfterMessagePrefix("REQUEST DATA:")
-			}
-	}
+    @Bean
+    @Profile("dev")
+    fun logFilter(): CommonsRequestLoggingFilter {
+
+        return CommonsRequestLoggingFilter()
+            .also {
+                it.setIncludeQueryString(true)
+                    it.setIncludePayload(true)
+                    it.setMaxPayloadLength(10000)
+                    it.setIncludeHeaders(true)
+                    it.setAfterMessagePrefix("REQUEST DATA:")
+            }
+    }
 }

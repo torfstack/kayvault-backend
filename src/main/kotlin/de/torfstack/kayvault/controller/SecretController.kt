@@ -32,7 +32,9 @@ class SecretController(val secretService: SecretService) {
 
     data class PostSecretRequestEntity(
         val key: String,
-        val value: String
+        val value: String,
+        val notes: String?,
+        val url: String?
     )
 
     data class PostSecretResponseEntity(

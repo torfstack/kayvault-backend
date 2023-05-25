@@ -1,15 +1,17 @@
+import org.jetbrains.kotlin.config.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "3.0.2"
+        id("org.springframework.boot") version "3.0.7"
 	id("io.spring.dependency-management") version "1.1.0"
-	kotlin("jvm") version "1.7.22"
-	kotlin("plugin.spring") version "1.7.22"
+	kotlin("jvm") version "1.8.20"
+	kotlin("plugin.spring") version "1.8.20"
 }
 
 group = "de.torfstack"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
+java.targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
 	mavenCentral()
@@ -17,7 +19,7 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-rest")
-	//implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	//implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 	implementation("org.springframework.boot:spring-boot-starter-logging")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 
@@ -32,7 +34,7 @@ dependencies {
 
 	implementation("io.github.microutils:kotlin-logging:3.0.5")
 
-	//runtimeOnly("com.h2database:h2:2.1.214")
+	runtimeOnly("com.h2database:h2:2.1.214")
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client:3.1.2")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -48,4 +50,8 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.named("bootRun") {
+	(this as JavaExec).jvmArgs = listOf("-Dspring.profiles.active=dev")
 }

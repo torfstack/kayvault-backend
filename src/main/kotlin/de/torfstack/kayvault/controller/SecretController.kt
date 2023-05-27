@@ -13,14 +13,19 @@ class SecretController(val secretService: SecretService) {
 
     @GetMapping("secret")
     fun getSecret(): List<String> {
-        return secretService.secretsForUser("test")
-            .map { it.actualValue }
-            .ifEmpty { listOf("") }
+        return secretsForUser("test")
     }
 
     @PostMapping("secret")
-    fun postSecret(@RequestBody entity: PostSecretRequestEntity) {
+    fun postSecret(@RequestBody entity: PostSecretRequestEntity): List<String> {
         secretService.addSecretForUser("test", entity.value)
+        return secretsForUser("test")
+    }
+
+    private fun secretsForUser(user: String): List<String> {
+        return secretService.secretsForUser(user)
+            .map { it.actualValue }
+            .ifEmpty { listOf("") }
     }
 
     data class PostSecretRequestEntity(

@@ -23,16 +23,14 @@ fun main(args: Array<String>) {
 class RequestLoggingConfiguration {
 
     @Bean
-    @Profile("dev")
     fun logFilter(): CommonsRequestLoggingFilter {
-
         return CommonsRequestLoggingFilter()
             .also {
                 it.setIncludeQueryString(true)
-                    it.setIncludePayload(true)
-                    it.setMaxPayloadLength(10000)
-                    it.setIncludeHeaders(true)
-                    it.setAfterMessagePrefix("REQUEST DATA:")
+                it.setIncludePayload(true)
+                it.setMaxPayloadLength(10000)
+                it.setIncludeHeaders(true)
+                it.setAfterMessagePrefix("REQUEST DATA:")
             }
     }
 }

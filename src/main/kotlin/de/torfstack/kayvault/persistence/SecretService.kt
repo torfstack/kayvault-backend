@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 @Service
 class SecretService @Autowired constructor(val repo: SecretRepository) {
     fun secretsForUser(user: String): List<SecretEntity> {
-        return repo.findAll()
+        return repo.findByForUser(user)
     }
 
     fun addSecretForUser(user: String, secret: String) {

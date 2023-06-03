@@ -34,6 +34,8 @@ dependencies {
 
 	implementation("io.github.microutils:kotlin-logging:3.0.5")
 
+	implementation("com.nimbusds:nimbus-jose-jwt:9.31")
+
 	runtimeOnly("com.h2database:h2:2.1.214")
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client:3.1.2")
 

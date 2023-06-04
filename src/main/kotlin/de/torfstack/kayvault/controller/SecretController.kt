@@ -1,36 +1,40 @@
 package de.torfstack.kayvault.controller
 
+import com.google.api.gax.rpc.InvalidArgumentException
 import com.nimbusds.jwt.SignedJWT
 import de.torfstack.kayvault.persistence.SecretService
+import de.torfstack.kayvault.validation.TokenValidator
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
+import java.lang.IllegalArgumentException
 
 @RestController
 @CrossOrigin
-class SecretController(val secretService: SecretService) {
+class SecretController(val secretService: SecretService, val tokenVerifier: TokenValidator) {
 
     @GetMapping("secret")
     fun getSecret(@RequestHeader authorization: String): List<String> {
-        val jwt = jwtFromHeader(authorization)
-        val user = jwt.jwtClaimsSet.subject
+        val user = userFromHeader(authorization)
         return secretsForUser(user)
     }
 
     @PostMapping("secret")
     fun postSecret(@RequestHeader authorization: String, @RequestBody entity: PostSecretRequestEntity): List<String> {
-        val jwt = jwtFromHeader(authorization)
-        val user = jwt.jwtClaimsSet.subject
+        val user = userFromHeader(authorization)
         secretService.addSecretForUser(user, entity.value)
         return secretsForUser(user)
     }
 
-    private fun jwtFromHeader(header: String): SignedJWT {
+    private fun userFromHeader(header: String): String {
         val authorization = header.removePrefix("Bearer")
-        return SignedJWT.parse(authorization)
+        when (val result = tokenVerifier.validate(authorization)) {
+            is TokenValidator.InvalidVerification -> throw IllegalArgumentException("token could not be verified", result.ex)
+            is TokenValidator.ValidVerification -> return result.user
+        }
     }
 
     private fun secretsForUser(user: String): List<String> {

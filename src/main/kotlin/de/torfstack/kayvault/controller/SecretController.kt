@@ -2,6 +2,7 @@ package de.torfstack.kayvault.controller
 
 import com.google.api.gax.rpc.InvalidArgumentException
 import com.nimbusds.jwt.SignedJWT
+import de.torfstack.kayvault.persistence.SecretEntity
 import de.torfstack.kayvault.persistence.SecretService
 import de.torfstack.kayvault.validation.TokenValidator
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -17,15 +18,15 @@ import java.lang.IllegalArgumentException
 class SecretController(val secretService: SecretService, val tokenVerifier: TokenValidator) {
 
     @GetMapping("secret")
-    fun getSecret(@RequestHeader authorization: String): List<String> {
+    fun getSecret(@RequestHeader authorization: String): List<SecretRequestEntity> {
         val user = userFromHeader(authorization)
         return secretsForUser(user)
     }
 
     @PostMapping("secret")
-    fun postSecret(@RequestHeader authorization: String, @RequestBody entity: PostSecretRequestEntity): List<String> {
+    fun postSecret(@RequestHeader authorization: String, @RequestBody entity: SecretRequestEntity): List<SecretRequestEntity> {
         val user = userFromHeader(authorization)
-        secretService.addSecretForUser(user, entity.value)
+        secretService.addSecretForUser(user, entity.value, entity.key, entity.url)
         return secretsForUser(user)
     }
 
@@ -37,13 +38,20 @@ class SecretController(val secretService: SecretService, val tokenVerifier: Toke
         }
     }
 
-    private fun secretsForUser(user: String): List<String> {
+    private fun secretsForUser(user: String): List<SecretRequestEntity> {
         return secretService.secretsForUser(user)
-            .map { it.actualValue }
-            .ifEmpty { listOf("") }
+            .map {
+                SecretRequestEntity(
+                    key = it.secretKey,
+                    value = it.secretValue,
+                    url = it.secretUrl,
+                    notes = ""
+                )
+            }
+            .ifEmpty { emptyList() }
     }
 
-    data class PostSecretRequestEntity(
+    data class SecretRequestEntity(
         val key: String,
         val value: String,
         val notes: String?,

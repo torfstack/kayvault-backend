@@ -9,8 +9,14 @@ class SecretEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     var secretId: Long = 0
 
-    @Column(name = "actualValue")
-    var actualValue: String = ""
+    @Column(name = "secretValue")
+    var secretValue: String = ""
+
+    @Column(name = "secretKey")
+    var secretKey: String = ""
+
+    @Column(name = "secretUrl")
+    var secretUrl: String = ""
 
     @Column(name = "forUser")
     var forUser: String = ""

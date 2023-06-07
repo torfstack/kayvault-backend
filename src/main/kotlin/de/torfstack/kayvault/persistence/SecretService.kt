@@ -9,10 +9,12 @@ class SecretService @Autowired constructor(val repo: SecretRepository) {
         return repo.findByForUser(user)
     }
 
-    fun addSecretForUser(user: String, secret: String) {
+    fun addSecretForUser(user: String, secret: String, key: String, url: String?) {
         repo.save(
             SecretEntity().also {
-                it.actualValue = secret
+                it.secretValue = secret
+                it.secretKey = key
+                it.secretUrl = url.orEmpty()
                 it.forUser = user
             }
         )

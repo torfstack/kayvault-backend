@@ -38,3 +38,6 @@ out/
 
 ### FIREBASE ###
 kayvault-c8416-d1b77965b6ee.json
+
+### OKTETO LOGIN TOKEN ###
+dockersecret

@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component
 class FirebaseTokenValidator : TokenValidator {
 
     private val app: FirebaseApp by lazy {
-        val secret = System.getenv("FIREBASE_SECRET").byteInputStream()
+        val secret = System.getenv("FIREBASE_SECRET")
         FirebaseApp.initializeApp(
             FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(secret))
+                .setCredentials(GoogleCredentials.fromStream(secret.byteInputStream()))
                 .build()
         )
     }

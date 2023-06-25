@@ -4,7 +4,6 @@ import assertk.assertThat
 import assertk.assertions.containsOnly
 import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
-import assertk.assertions.isEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -20,7 +19,7 @@ class SecretServiceTest {
     lateinit var secretService: SecretService
 
     @ParameterizedTest
-    @ValueSource(ints = [0, 1, 2, 3])
+    @ValueSource(ints = [0, 1, 2, 3, 400])
     fun `returns secrets put into the service for same user`(numberOfSecrets: Int) {
         val expected = (1..numberOfSecrets).map {
             SecretModel(secretKey = "key$it", secretUrl = "url$it", secretValue = "secret$it")

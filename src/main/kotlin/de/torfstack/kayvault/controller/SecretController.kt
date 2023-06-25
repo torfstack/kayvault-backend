@@ -3,6 +3,7 @@ package de.torfstack.kayvault.controller
 import com.google.api.gax.rpc.InvalidArgumentException
 import com.nimbusds.jwt.SignedJWT
 import de.torfstack.kayvault.persistence.SecretEntity
+import de.torfstack.kayvault.persistence.SecretModel
 import de.torfstack.kayvault.persistence.SecretService
 import de.torfstack.kayvault.validation.TokenValidator
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -26,7 +27,7 @@ class SecretController(val secretService: SecretService, val tokenVerifier: Toke
     @PostMapping("secret")
     fun postSecret(@RequestHeader authorization: String, @RequestBody entity: SecretRequestEntity): List<SecretRequestEntity> {
         val user = userFromHeader(authorization)
-        secretService.addSecretForUser(user, entity.value, entity.key, entity.url)
+        secretService.addSecretForUser(user, entity.toModel())
         return secretsForUser(user)
     }
 
@@ -56,5 +57,13 @@ class SecretController(val secretService: SecretService, val tokenVerifier: Toke
         val value: String,
         val notes: String?,
         val url: String?
-    )
+    ) {
+        fun toModel(): SecretModel {
+            return SecretModel(
+                secretValue = value,
+                secretUrl = url,
+                secretKey = key
+            )
+        }
+    }
 }

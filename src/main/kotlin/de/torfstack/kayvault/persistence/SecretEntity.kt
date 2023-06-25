@@ -16,7 +16,7 @@ class SecretEntity {
     var secretKey: String = ""
 
     @Column(name = "secretUrl")
-    var secretUrl: String = ""
+    var secretUrl: String? = null
 
     @Column(name = "forUser")
     var forUser: String = ""

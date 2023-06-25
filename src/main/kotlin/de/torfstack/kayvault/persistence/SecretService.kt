@@ -5,16 +5,18 @@ import org.springframework.stereotype.Service
 
 @Service
 class SecretService @Autowired constructor(val repo: SecretRepository) {
-    fun secretsForUser(user: String): List<SecretEntity> {
-        return repo.findByForUser(user)
+    fun secretsForUser(user: String): List<SecretModel> {
+        return repo.findByForUser(user).map {
+            SecretModel.fromEntity(it)
+        }
     }
 
-    fun addSecretForUser(user: String, secret: String, key: String, url: String?) {
+    fun addSecretForUser(user: String, model: SecretModel) {
         repo.save(
             SecretEntity().also {
-                it.secretValue = secret
-                it.secretKey = key
-                it.secretUrl = url.orEmpty()
+                it.secretValue = model.secretValue
+                it.secretKey = model.secretKey
+                it.secretUrl = model.secretUrl
                 it.forUser = user
             }
         )

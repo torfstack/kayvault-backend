@@ -28,7 +28,7 @@ class SecretController(val secretService: SecretService, val tokenVerifier: Toke
     }
 
     private fun userFromHeader(header: String): String {
-        val authorization = header.removePrefix("Bearer")
+        val authorization = header.removePrefix("Bearer").trim()
         when (val result = tokenVerifier.validate(authorization)) {
             is TokenValidator.InvalidVerification -> {
                 Log.warn { "token could not be verified" }
